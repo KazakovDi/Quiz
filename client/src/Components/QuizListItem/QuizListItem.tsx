@@ -4,7 +4,7 @@ import SimpleLink from "../UI/SimpleLink/SimpleLink";
 import Flex from "../UI/Flex/Flex";
 import { QuizProps } from "../../types/quiztypes";
 
-const QuizListItem = ({ cover, title, quizDescription, _id }: QuizProps) => {
+const QuizListItem = ({ cover, title, description, _id }: QuizProps) => {
   return (
     <QuizCard>
       {!cover ? (
@@ -17,7 +17,7 @@ const QuizListItem = ({ cover, title, quizDescription, _id }: QuizProps) => {
         <img src={cover} />
       )}
       <Heading>{title}</Heading>
-      <Description>{quizDescription}</Description>
+      <Description>{description}</Description>
       <Flex justify="end">
         <SimpleLink to={`/${_id}`}>Start</SimpleLink>
       </Flex>

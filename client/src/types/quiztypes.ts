@@ -19,6 +19,6 @@ export interface QuizProps {
   _id: string;
   title: string;
   cover: string;
-  quizDescription: string;
+  description: string;
   questions: QuiestionProps[];
 }

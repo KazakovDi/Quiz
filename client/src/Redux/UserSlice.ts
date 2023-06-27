@@ -36,7 +36,8 @@ const userSlice = createSlice({
   initialState,
   name: "user",
   reducers: {
-    logout(state) {
+    logout() {
+      window.localStorage.removeItem("token");
       return initialState;
     },
   },

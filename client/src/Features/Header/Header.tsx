@@ -8,7 +8,13 @@ import {
   IconPlus,
 } from "@tabler/icons-react";
 import styled from "styled-components";
+import Button from "../../Components/UI/Button/Button";
+import { useAppDispatch } from "../../Redux/store";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../../Redux/UserSlice";
+import { useLogout } from "./hooks/useLogout";
 const Header = () => {
+  const Logout = useLogout();
   return (
     <HeaderSection>
       <nav>
@@ -18,7 +24,9 @@ const Header = () => {
             <IconPlus />
             <IconUser />
             <IconSettings />
-            <IconLogout />
+            <Button onClick={Logout} variant="hollow" color="#fff">
+              <IconLogout />
+            </Button>
           </Flex>
         </Flex>
       </nav>

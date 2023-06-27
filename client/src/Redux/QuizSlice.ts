@@ -40,7 +40,7 @@ const initialState: State = {
     _id: "",
     title: "",
     cover: "",
-    quizDescription: "",
+    description: "",
     questions: [],
   },
   CreatingQuestion: null,
