@@ -11,14 +11,19 @@ import { calm } from "../../Components/Style/pallete";
 import SimpleLink from "../../Components/UI/SimpleLink/SimpleLink";
 import { useAppDispatch } from "../../Redux/store";
 import { fetchLogin } from "../../Redux/UserSlice";
+import { useNavigate } from "react-router-dom";
 const Login = () => {
   const { control, handleSubmit } = useForm<LoginProps>();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const submitHandler = async (values: LoginProps) => {
     const {
-      payload: { token, username },
+      payload: { token },
     }: any = await dispatch(fetchLogin(values));
-    window.localStorage.setItem("token", token);
+    if (token) {
+      window.localStorage.setItem("token", token);
+      navigate("/");
+    }
   };
   return (
     <Wrapper align="center" justify="center">
