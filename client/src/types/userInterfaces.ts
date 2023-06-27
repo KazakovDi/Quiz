@@ -9,7 +9,7 @@ export interface LoginProps {
   password: string;
 }
 
-export interface UserResponce {
+export interface UserResponceProps {
   token: string;
   username: string;
 }

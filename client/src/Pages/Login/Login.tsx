@@ -4,15 +4,21 @@ import Flex from "../../Components/UI/Flex/Flex";
 import { Controller } from "react-hook-form";
 import FormInput from "../../Components/UI/FormInput/FormInput";
 import { useForm } from "react-hook-form";
-import { LoginProps } from "../../types/user";
+import { LoginProps, UserResponceProps } from "../../types/userInterfaces";
 import Devider from "../../Components/UI/Devider/Devider";
 import Button from "../../Components/UI/Button/Button";
 import { calm } from "../../Components/Style/pallete";
 import SimpleLink from "../../Components/UI/SimpleLink/SimpleLink";
+import { useAppDispatch } from "../../Redux/store";
+import { fetchLogin } from "../../Redux/UserSlice";
 const Login = () => {
   const { control, handleSubmit } = useForm<LoginProps>();
-  const submitHandler = (values: LoginProps) => {
-    console.log(values);
+  const dispatch = useAppDispatch();
+  const submitHandler = async (values: LoginProps) => {
+    const {
+      payload: { token, username },
+    }: any = await dispatch(fetchLogin(values));
+    window.localStorage.setItem("token", token);
   };
   return (
     <Wrapper align="center" justify="center">

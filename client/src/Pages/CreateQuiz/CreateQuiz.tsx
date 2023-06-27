@@ -9,7 +9,7 @@ import { error, calm, disabled, success } from "../../Components/Style/pallete";
 import QuestionModal from "../../Components/QuestionModal/QuestionModal";
 import { RootState, useAppDispatch } from "../../Redux/store";
 import { useSelector } from "react-redux";
-import { addQuestion, editModal } from "../../Redux/QuisSlice";
+import { addQuestion, editModal } from "../../Redux/QuizSlice";
 import Flex from "../../Components/UI/Flex/Flex";
 import styled from "styled-components";
 import Devider from "../../Components/UI/Devider/Devider";

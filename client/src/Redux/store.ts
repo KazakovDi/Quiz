@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 
-import { quizReducer } from "./QuisSlice";
+import { quizReducer } from "./QuizSlice";
 import { userReducer } from "./UserSlice";
 const store = configureStore({
   reducer: {

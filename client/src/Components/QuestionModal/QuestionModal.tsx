@@ -18,7 +18,7 @@ import {
   changeAnswerBody,
   closeModal,
   submitQuestion,
-} from "../../Redux/QuisSlice";
+} from "../../Redux/QuizSlice";
 const QuestionModal = () => {
   const dispatch = useAppDispatch();
   const [bodyValue, setBodyValue] = useState<string>("");

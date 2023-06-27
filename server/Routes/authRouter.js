@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const checkAuth = require("../utils/checkAuth.js");
 
-router.post("/signin", async (req, res) => {
+router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
     if (!user)
@@ -23,9 +23,9 @@ router.post("/signin", async (req, res) => {
       "secret",
       { expiresIn: "30d" }
     );
-
+    const { password, email, ...userData } = user._doc;
     res.json({
-      user,
+      ...userData,
       token,
     });
   } catch (err) {
@@ -33,14 +33,14 @@ router.post("/signin", async (req, res) => {
     res.status(500).json({ message: "Серверная ошибка" });
   }
 });
-router.post("/signup", async (req, res) => {
+router.post("/register", async (req, res) => {
   try {
     const pass = req.body.password;
     const salt = await bcrypt.genSalt(8);
     const hashedPassword = await bcrypt.hash(pass, salt);
-
+    console.log(req.body);
     const doc = new User({
-      login: req.body.login,
+      username: req.body.username,
       email: req.body.email,
       password: hashedPassword,
     });
@@ -54,7 +54,7 @@ router.post("/signup", async (req, res) => {
       { expiresIn: "30d" }
     );
 
-    const { password, ...userData } = user._doc;
+    const { password, email, ...userData } = user._doc;
     res.json({ ...userData, token });
   } catch (err) {
     console.log(err);

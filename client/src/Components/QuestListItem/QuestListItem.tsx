@@ -6,7 +6,7 @@ import { IconTrashX, IconPencil } from "@tabler/icons-react";
 import { error, calm } from "../Style/pallete";
 import { QuiestionProps } from "../../types/quiztypes";
 import { useAppDispatch } from "../../Redux/store";
-import { deleteQuestion, editModal } from "../../Redux/QuisSlice";
+import { deleteQuestion, editModal } from "../../Redux/QuizSlice";
 const QuestListItem = ({ id, type, questionBody, answers }: QuiestionProps) => {
   const dispatch = useAppDispatch();
   return (

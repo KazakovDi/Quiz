@@ -16,7 +16,9 @@ export interface QuiestionProps {
 }
 
 export interface QuizProps {
+  _id: string;
   title: string;
+  cover: string;
   quizDescription: string;
   questions: QuiestionProps[];
 }

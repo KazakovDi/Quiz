@@ -2,35 +2,24 @@ import React from "react";
 import styled from "styled-components";
 import SimpleLink from "../UI/SimpleLink/SimpleLink";
 import Flex from "../UI/Flex/Flex";
+import { QuizProps } from "../../types/quiztypes";
 
-export interface QuizItemParams {
-  preview?: string;
-  heading: string;
-  description: string;
-  anchor: string;
-}
-
-const QuizListItem = ({
-  preview,
-  heading,
-  description,
-  anchor,
-}: QuizItemParams) => {
+const QuizListItem = ({ cover, title, quizDescription, _id }: QuizProps) => {
   return (
     <QuizCard>
-      {!preview ? (
+      {!cover ? (
         <img
           width="300px"
           height="200px"
           src={"http://localhost:3000/Quiza.png"}
         />
       ) : (
-        <img src={preview} />
+        <img src={cover} />
       )}
-      <Heading>{heading}</Heading>
-      <Description>{description}</Description>
+      <Heading>{title}</Heading>
+      <Description>{quizDescription}</Description>
       <Flex justify="end">
-        <SimpleLink to={"/"}>Start</SimpleLink>
+        <SimpleLink to={`/${_id}`}>Start</SimpleLink>
       </Flex>
     </QuizCard>
   );

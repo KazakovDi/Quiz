@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import {
   QuiestionProps,
@@ -6,15 +6,40 @@ import {
   QuestionTypes,
   AnswerProps,
 } from "../types/quiztypes";
+import { apiInterface } from "../api";
+import { responseStatus } from "../types/responseSatus";
 
 interface State {
+  Quizes: {
+    data: QuizProps[] | [];
+    status: responseStatus;
+  };
   CreatingQuiz: QuizProps;
   CreatingQuestion: QuiestionProps | null;
 }
 
+export const fetchQuizes = createAsyncThunk<QuizProps[]>(
+  "quiz/fetchQuizes",
+  async () => {
+    try {
+      const quizes = await apiInterface.quiz.getQuizes();
+      if (!quizes) return [];
+      return quizes;
+    } catch (err: any) {
+      console.log(err);
+    }
+  }
+);
+
 const initialState: State = {
+  Quizes: {
+    data: [],
+    status: responseStatus.DEFAULT,
+  },
   CreatingQuiz: {
+    _id: "",
     title: "",
+    cover: "",
     quizDescription: "",
     questions: [],
   },
@@ -95,6 +120,26 @@ const QuizSlice = createSlice({
         }
       );
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchQuizes.pending, (state) => {
+      state.Quizes = {
+        data: [],
+        status: responseStatus.PENDING,
+      };
+    });
+    builder.addCase(fetchQuizes.rejected, (state) => {
+      state.Quizes = {
+        data: [],
+        status: responseStatus.REJECTED,
+      };
+    });
+    builder.addCase(fetchQuizes.fulfilled, (state, action) => {
+      state.Quizes = {
+        data: action.payload,
+        status: responseStatus.FULLFILLED,
+      };
+    });
   },
 });
 

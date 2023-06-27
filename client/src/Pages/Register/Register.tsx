@@ -4,7 +4,7 @@ import Flex from "../../Components/UI/Flex/Flex";
 import { Controller } from "react-hook-form";
 import FormInput from "../../Components/UI/FormInput/FormInput";
 import { useForm } from "react-hook-form";
-import { LoginProps, RegisterProps } from "../../types/user";
+import { LoginProps, RegisterProps } from "../../types/userInterfaces";
 import Devider from "../../Components/UI/Devider/Devider";
 import Button from "../../Components/UI/Button/Button";
 import { calm } from "../../Components/Style/pallete";

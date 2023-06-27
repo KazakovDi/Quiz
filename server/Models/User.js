@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
   {
-    login: {
+    username: {
       type: String,
       required: true,
       unique: true,
@@ -15,14 +15,6 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-    },
-    coupones: {
-      type: Array,
-      default: [],
-    },
-    orders: {
-      type: Array,
-      default: [],
     },
   },
   {

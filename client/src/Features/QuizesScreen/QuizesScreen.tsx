@@ -1,13 +1,14 @@
 import React from "react";
-import { QuizItemParams } from "../../Components/QuizListItem/QuizListItem";
 import QuizListItem from "../../Components/QuizListItem/QuizListItem";
 import Flex from "../../Components/UI/Flex/Flex";
 import styled from "styled-components";
-const QuizesScreen = ({ data }: { data: QuizItemParams[] }) => {
+import { QuizProps } from "../../types/quiztypes";
+const QuizesScreen = ({ data }: { data: QuizProps[] }) => {
   return (
     <Wrapper>
       <Flex wrap="wrap" justify="around">
         {data.map((item) => {
+          console.log(item);
           return <QuizListItem {...item} />;
         })}
       </Flex>

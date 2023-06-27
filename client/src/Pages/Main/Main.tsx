@@ -1,31 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import Header from "../../Features/Header/Header";
 import Footer from "../../Features/Footer/Footer";
 import QuizesScreen from "../../Features/QuizesScreen/QuizesScreen";
 import Sidebar from "../../Features/Sidebar/Sidebar";
 import styled from "styled-components";
-const data = [
-  {
-    preview: "",
-    heading: "test",
-    description: "some description here",
-    anchor: "/",
-  },
-  {
-    preview: "",
-    heading: "test 2",
-    description: "some description here 2",
-    anchor: "/",
-  },
-  // {
-  //   preview: "",
-  //   heading: "test 3",
-  //   description: "some description here 3",
-  //   anchor: "/",
-  // },
-];
+import { RootState, useAppDispatch } from "../../Redux/store";
+import { useSelector } from "react-redux";
+import { fetchQuizes } from "../../Redux/QuizSlice";
 const Main = () => {
+  const dispatch = useAppDispatch();
+  const { data } = useSelector((state: RootState) => state.Quiz.Quizes);
+  useEffect(() => {
+    dispatch(fetchQuizes());
+  }, []);
   return (
     <Wrapper>
       <Header />
