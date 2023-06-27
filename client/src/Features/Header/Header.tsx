@@ -9,31 +9,55 @@ import {
 } from "@tabler/icons-react";
 import styled from "styled-components";
 import Button from "../../Components/UI/Button/Button";
-import { useAppDispatch } from "../../Redux/store";
-import { useNavigate } from "react-router-dom";
-import { logout } from "../../Redux/UserSlice";
 import { useLogout } from "./hooks/useLogout";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Redux/store";
+import Container from "../../Components/UI/Container/Container";
 const Header = () => {
   const Logout = useLogout();
+  const username = useSelector((state: RootState) => state.User.username);
   return (
     <HeaderSection>
-      <nav>
-        <Flex direction="row" align="center" justify="between">
-          <UnstyledLink to="/">Quiza</UnstyledLink>
+      <Container>
+        <nav>
           <Flex direction="row" align="center" justify="between">
-            <IconPlus />
-            <IconUser />
-            <IconSettings />
-            <Button onClick={Logout} variant="hollow" color="#fff">
-              <IconLogout />
-            </Button>
+            <Logo to="/">Quiza</Logo>
+            <Flex direction="row" align="center" justify="around">
+              <BlockLink to="/create">
+                <IconPlus />
+              </BlockLink>
+              {/* <IconUser /> */}
+
+              <Username>{username}</Username>
+              <BlockLink onClick={Logout} to="#">
+                <IconLogout />
+              </BlockLink>
+            </Flex>
           </Flex>
-        </Flex>
-      </nav>
+        </nav>
+      </Container>
     </HeaderSection>
   );
 };
-
+const Logo = styled(Link)`
+  font-size: 40px;
+  text-decoration: none;
+  font-weight: 700;
+`;
+const Username = styled.h2`
+  margin: 0;
+`;
+const BlockLink = styled(Link)`
+  margin: 0 10px;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+  * {
+    width: 50px;
+    height: 50px;
+  }
+`;
 const HeaderSection = styled.header`
   background-color: #29a2eb;
   * {

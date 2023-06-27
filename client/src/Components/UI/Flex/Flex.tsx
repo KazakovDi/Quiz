@@ -6,6 +6,7 @@ interface FlexParams {
   align?: "stretch" | "baseline" | "center" | "start" | "end";
   direction?: "row" | "column";
   wrap?: "wrap" | "nowrap";
+  gap?: "xl" | "lg" | "md" | "sm" | "xs";
   children?: React.ReactNode;
 }
 const Flex = (props: FlexParams) => {
