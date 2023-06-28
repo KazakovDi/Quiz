@@ -19,7 +19,7 @@ const QuizListItem = ({ cover, title, description, _id }: QuizProps) => {
       <Heading>{title}</Heading>
       <Description>{description}</Description>
       <Flex justify="end">
-        <SimpleLink to={`/${_id}`}>Start</SimpleLink>
+        <SimpleLink to={`/start-quiz/${_id}`}>Start</SimpleLink>
       </Flex>
     </QuizCard>
   );

@@ -10,6 +10,7 @@ import { apiInterface } from "../api";
 import { responseStatus } from "../types/responseSatus";
 
 interface State {
+  CurrentQuiz: QuizProps;
   Quizes: {
     data: QuizProps[] | [];
     status: responseStatus;
@@ -31,7 +32,26 @@ export const fetchQuizes = createAsyncThunk<QuizProps[]>(
   }
 );
 
+export const fetchQuizById = createAsyncThunk<QuizProps, string>(
+  "quiz/fetchQuizById",
+  async (id) => {
+    try {
+      const quiz = await apiInterface.quiz.getQuizById(id);
+      return quiz;
+    } catch (err: any) {
+      console.log(err);
+    }
+  }
+);
+
 const initialState: State = {
+  CurrentQuiz: {
+    _id: "",
+    title: "",
+    cover: "",
+    description: "",
+    questions: [],
+  },
   Quizes: {
     data: [],
     status: responseStatus.DEFAULT,
@@ -139,6 +159,12 @@ const QuizSlice = createSlice({
         data: action.payload,
         status: responseStatus.FULLFILLED,
       };
+    });
+
+    builder.addCase(fetchQuizById.pending, (state) => {});
+    builder.addCase(fetchQuizById.rejected, (state) => {});
+    builder.addCase(fetchQuizById.fulfilled, (state, action) => {
+      state.CurrentQuiz = action.payload;
     });
   },
 });

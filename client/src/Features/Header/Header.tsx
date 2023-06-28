@@ -8,7 +8,6 @@ import {
   IconPlus,
 } from "@tabler/icons-react";
 import styled from "styled-components";
-import Button from "../../Components/UI/Button/Button";
 import { useLogout } from "./hooks/useLogout";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
