@@ -12,6 +12,7 @@ import { useAppDispatch } from "./Redux/store";
 import { fetchAuthMe } from "./Redux/UserSlice";
 import QuizTitleScreen from "./Pages/QuizTitleScreen/QuizTitleScreen";
 import Question from "./Pages/Question/Question";
+import QuizResults from "./Pages/QuizResults/QuizResults";
 function App() {
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -27,7 +28,8 @@ function App() {
           <Route path="create" element={<CreateQuiz />} />
           <Route path="start-quiz/:id" element={<StartedQuiz />}>
             <Route path="" element={<QuizTitleScreen />} />
-            <Route path=":answer" element={<Question />} />
+            <Route path="results" element={<QuizResults />} />
+            <Route path=":question" element={<Question />} />
           </Route>
         </Route>
       </Routes>

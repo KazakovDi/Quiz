@@ -9,11 +9,12 @@ import { error, calm, disabled, success } from "../../Components/Style/pallete";
 import QuestionModal from "../../Components/QuestionModal/QuestionModal";
 import { RootState, useAppDispatch } from "../../Redux/store";
 import { useSelector } from "react-redux";
-import { addQuestion, editModal } from "../../Redux/QuizSlice";
+import { addQuestion, editModal, fetchCreateQuiz } from "../../Redux/QuizSlice";
 import Flex from "../../Components/UI/Flex/Flex";
 import styled from "styled-components";
 import Devider from "../../Components/UI/Devider/Devider";
 import GoBackBtn from "../../Components/GoBackBtn/GoBackBtn";
+import { QuizProps } from "../../types/quiztypes";
 const CreateQuiz = () => {
   const {
     control,
@@ -21,14 +22,21 @@ const CreateQuiz = () => {
     register,
     formState: { errors },
   } = useForm<any>();
-  const CurrentQuiz = useSelector(
-    (state: RootState) => state.Quiz.CreatingQuiz
+  const questions = useSelector(
+    (state: RootState) => state.Quiz.CreatingQuiz.questions
   );
   const dispatch = useAppDispatch();
+
+  const HandleSubmit = (values: any) => {
+    const newQuiz: QuizProps = { ...values };
+    newQuiz.cover = "";
+    newQuiz.questions = [...questions];
+    dispatch(fetchCreateQuiz(newQuiz));
+  };
   return (
     <FormWrapper align="center" justify="center">
       <GoBackBtn variant="hollow" color={calm} absolute top="5px" left="5px" />
-      <Form onSubmit={handleSubmit((values) => console.log(values))}>
+      <Form onSubmit={handleSubmit(HandleSubmit)}>
         <Flex direction="column">
           <Controller
             name="title"
@@ -82,7 +90,7 @@ const CreateQuiz = () => {
           </Flex>
           <Devider margin={"20px 0 0 0"} />
           <QuestionsWrapper>
-            {CurrentQuiz.questions.map((item) => {
+            {questions.map((item) => {
               return <QuestListItem {...item} />;
             })}
           </QuestionsWrapper>

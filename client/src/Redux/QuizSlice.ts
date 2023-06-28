@@ -10,6 +10,8 @@ import { apiInterface } from "../api";
 import { responseStatus } from "../types/responseSatus";
 
 interface State {
+  Answers: string[];
+  Result: number;
   CurrentQuiz: QuizProps;
   Quizes: {
     data: QuizProps[] | [];
@@ -44,7 +46,21 @@ export const fetchQuizById = createAsyncThunk<QuizProps, string>(
   }
 );
 
+export const fetchCreateQuiz = createAsyncThunk<any, QuizProps>(
+  "quiz/fetchCreateQuiz",
+  async (quiz) => {
+    try {
+      const response = await apiInterface.quiz.createQuiz(quiz);
+      return response;
+    } catch (err: any) {
+      console.log(err);
+    }
+  }
+);
+
 const initialState: State = {
+  Answers: [],
+  Result: 0,
   CurrentQuiz: {
     _id: "",
     title: "",
@@ -140,6 +156,19 @@ const QuizSlice = createSlice({
         }
       );
     },
+    setAnswer(state, action: PayloadAction<string>) {
+      state.Answers.push(action.payload);
+    },
+    calculateResult(state) {
+      let res = 0;
+      state.Answers.forEach((item, index) => {
+        state.CurrentQuiz.questions[index].answers.forEach((answer) => {
+          console.log("answer", answer);
+          if (answer.body === item && answer.isCorrect) res = res + 1;
+        });
+      });
+      state.Result = res;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchQuizes.pending, (state) => {
@@ -166,6 +195,10 @@ const QuizSlice = createSlice({
     builder.addCase(fetchQuizById.fulfilled, (state, action) => {
       state.CurrentQuiz = action.payload;
     });
+
+    builder.addCase(fetchCreateQuiz.pending, (state) => {});
+    builder.addCase(fetchCreateQuiz.rejected, (state) => {});
+    builder.addCase(fetchCreateQuiz.fulfilled, (state, action) => {});
   },
 });
 
@@ -182,4 +215,6 @@ export const {
   submitQuestion,
   addQuestion,
   deleteQuestion,
+  calculateResult,
+  setAnswer,
 } = QuizSlice.actions;

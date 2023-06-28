@@ -18,26 +18,10 @@ router.post("/create", async (req, res) => {
   const post = await doc.save();
   res.json(post);
 });
-// router.post("/create-order", checkAuth, async (req, res) => {
-//   const doc = new Order({
-//     name: req.body.name,
-//     email: req.body.email,
-//     phone: req.body.phone,
-//     adress: req.body.adress,
-//     orders: req.body.orders,
-//   });
-//   const user = await User.findById(req.userId);
-//   const order = await doc.save();
-
-//   await order.save();
-//   user.orders.push(order);
-//   await user.save();
-//   res.json(order);
-// });
-// router.get("/:id", async (req, res) => {
-//   const shop = await Shop.findById(req.params.id);
-//   res.json(shop);
-// });
+router.get("/:id", async (req, res) => {
+  const quiz = await Quiz.findById(req.params.id);
+  res.json(quiz);
+});
 // router.post("/:id/create-product", async (req, res) => {
 //   const shop = await Shop.findById(req.params.id);
 //   const doc = new Product({
