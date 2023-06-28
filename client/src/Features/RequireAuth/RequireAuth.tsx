@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import { RootState } from "../../Redux/store";
 const RequireAuth = (props: any) => {
   const token = window.localStorage.getItem("token");
-  console.log(token);
   if (!token) {
     return <Navigate to={"/auth/login"} />;
   }

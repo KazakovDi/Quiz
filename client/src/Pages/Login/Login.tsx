@@ -17,11 +17,9 @@ const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const submitHandler = async (values: LoginProps) => {
-    const {
-      payload: { token },
-    }: any = await dispatch(fetchLogin(values));
-    if (token) {
-      window.localStorage.setItem("token", token);
+    const { payload }: any = await dispatch(fetchLogin(values));
+    if (payload.token) {
+      window.localStorage.setItem("token", payload.token);
       navigate("/");
     }
   };

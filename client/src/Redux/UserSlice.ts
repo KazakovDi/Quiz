@@ -4,7 +4,7 @@ import { apiInterface } from "../api";
 import { RegisterProps, LoginProps } from "../types/userInterfaces";
 
 export const fetchRegister = createAsyncThunk<UserResponceProps, RegisterProps>(
-  "quiz/fetchRegister",
+  "user/fetchRegister",
   async (params) => {
     try {
       const response = apiInterface.auth.register(params);
@@ -16,7 +16,7 @@ export const fetchRegister = createAsyncThunk<UserResponceProps, RegisterProps>(
 );
 
 export const fetchLogin = createAsyncThunk<UserResponceProps, LoginProps>(
-  "quiz/fetchLogin",
+  "user/fetchLogin",
   async (params) => {
     try {
       const response = apiInterface.auth.login(params);
@@ -26,6 +26,15 @@ export const fetchLogin = createAsyncThunk<UserResponceProps, LoginProps>(
     }
   }
 );
+
+export const fetchAuthMe = createAsyncThunk("user/fetchAuthMe", async () => {
+  try {
+    const response = apiInterface.auth.me();
+    return response;
+  } catch (err: any) {
+    console.log(err);
+  }
+});
 
 const initialState: UserResponceProps = {
   token: "",
@@ -47,9 +56,16 @@ const userSlice = createSlice({
     builder.addCase(fetchRegister.fulfilled, (state, action) => {
       return { ...action.payload };
     });
+
     builder.addCase(fetchLogin.pending, (state) => {});
     builder.addCase(fetchLogin.rejected, (state) => {});
     builder.addCase(fetchLogin.fulfilled, (state, action) => {
+      return { ...action.payload };
+    });
+
+    builder.addCase(fetchAuthMe.pending, (state) => {});
+    builder.addCase(fetchAuthMe.rejected, (state) => {});
+    builder.addCase(fetchAuthMe.fulfilled, (state, action) => {
       return { ...action.payload };
     });
   },

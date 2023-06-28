@@ -27,7 +27,6 @@ const Header = () => {
               <BlockLink to="/create">
                 <IconPlus />
               </BlockLink>
-              {/* <IconUser /> */}
 
               <Username>{username}</Username>
               <BlockLink onClick={Logout} to="#">
