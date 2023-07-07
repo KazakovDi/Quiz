@@ -11,11 +11,12 @@ import { QuestionTypes } from "../../types/quiztypes";
 import Devider from "../UI/Devider/Devider";
 import {
   changeQuestionType,
-  changeAnswerIsCorrect,
+  changeTestAnswer,
   addAnswer,
   removeAnswerById,
   changeQuestionBody,
   changeAnswerBody,
+  changeMultiTestAnswer,
   closeModal,
   submitQuestion,
 } from "../../Redux/QuizSlice";
@@ -31,6 +32,12 @@ const QuestionModal = () => {
     else return [];
   });
 
+  const ChangeTestAnswerHandler = (id: string) => {
+    dispatch(changeTestAnswer(id));
+  };
+  const ChangeMultiAnswerHandler = (id: string) => {
+    dispatch(changeMultiTestAnswer(id));
+  };
   useEffect(() => {
     const id = setTimeout(() => {
       dispatch(changeQuestionBody(bodyValue));
@@ -43,6 +50,8 @@ const QuestionModal = () => {
   useEffect(() => {
     const id = setTimeout(() => {
       dispatch(changeAnswerBody(changingAnswer));
+      if (CurrentQuestion?.type === QuestionTypes.FULL)
+        dispatch(addAnswer(changingAnswer));
     }, 500);
     return () => {
       clearTimeout(id);
@@ -144,75 +153,97 @@ const QuestionModal = () => {
               placeholder="Type the question (100 symbols)"
             />
           </div>
-
-          <div style={{ marginBottom: "60px" }}>
-            <Devider margin="20px 0 0 0" />
-            <Flex align="center">
-              <FormSectionHeading>Add answers</FormSectionHeading>
-              <Button
-                disabled={answers.length > 5}
-                onClick={() => dispatch(addAnswer())}
-                type="button"
-                variant="outlined"
-                svgHeight="20px"
-                svgWidth="20px"
-                hover
-                color={blocked}
-                style={{ marginLeft: "10px" }}
-              >
-                <IconPlus />
-              </Button>
-            </Flex>
-
-            <Devider margin="0 0 8px 0" />
-
-            {answers.map((item) => {
-              return (
-                <AnswerItem
-                  isActive={item.isCorrect}
-                  key={item.id}
-                  align="center"
-                  justify="between"
+          {CurrentQuestion.type === QuestionTypes.FULL ? (
+            <FormInput
+              fullWidth
+              placeholder="Type an answer (45 symbols)"
+              maxLength={45}
+              fontSize="20px"
+              variant="underlined"
+              required
+              onChange={(e) => {
+                setChangingAnswer({
+                  body: e.target.value,
+                  id: "" + Math.random(),
+                  isCorrect: true,
+                });
+              }}
+            />
+          ) : (
+            <div style={{ marginBottom: "60px" }}>
+              <Devider margin="20px 0 0 0" />
+              <Flex align="center">
+                <FormSectionHeading>Add answers</FormSectionHeading>
+                <Button
+                  disabled={answers.length > 5}
+                  onClick={() => dispatch(addAnswer(false as never))}
+                  type="button"
+                  variant="outlined"
+                  svgHeight="20px"
+                  svgWidth="20px"
+                  hover
+                  color={blocked}
+                  style={{ marginLeft: "10px" }}
                 >
-                  <FormInput
-                    fullWidth
-                    placeholder="Type an answer (45 symbols)"
-                    maxLength={45}
-                    fontSize="20px"
-                    variant="underlined"
-                    required
-                    defaultValue={item.body}
-                    onChange={(e) =>
-                      setChangingAnswer({
-                        body: e.target.value,
-                        id: item.id,
-                      })
-                    }
-                  />
-                  <Flex>
-                    <Button
-                      color={item.isCorrect ? "#fff" : calm}
-                      type="button"
-                      bgColor={item.isCorrect ? calm : "none"}
-                      variant={item.isCorrect ? "filled" : "outlined"}
-                      onClick={() => dispatch(changeAnswerIsCorrect(item.id))}
-                    >
-                      select
-                    </Button>
-                    <Button
-                      color={"#fff"}
-                      type="button"
-                      bgColor={error}
-                      variant="filled"
-                      onClick={() => dispatch(removeAnswerById(item.id))}
-                    >
-                      delete
-                    </Button>
-                  </Flex>
-                </AnswerItem>
-              );
-            })}
-          </div>
+                  <IconPlus />
+                </Button>
+              </Flex>
+
+              <Devider margin="0 0 8px 0" />
+
+              {answers.map((item) => {
+                return (
+                  <AnswerItem
+                    isActive={item.isCorrect}
+                    key={item.id}
+                    align="center"
+                    justify="between"
+                  >
+                    <FormInput
+                      fullWidth
+                      placeholder="Type an answer (45 symbols)"
+                      maxLength={45}
+                      fontSize="20px"
+                      variant="underlined"
+                      required
+                      defaultValue={item.body}
+                      onChange={(e) =>
+                        setChangingAnswer({
+                          body: e.target.value,
+                          id: item.id,
+                        })
+                      }
+                    />
+                    <Flex>
+                      <Button
+                        color={item.isCorrect ? "#fff" : calm}
+                        type="button"
+                        bgColor={item.isCorrect ? calm : "none"}
+                        variant={item.isCorrect ? "filled" : "outlined"}
+                        onClick={() =>
+                          CurrentQuestion.type === QuestionTypes.TEST
+                            ? ChangeTestAnswerHandler(item.id)
+                            : ChangeMultiAnswerHandler(item.id)
+                        }
+                      >
+                        select
+                      </Button>
+                      <Button
+                        color={"#fff"}
+                        type="button"
+                        bgColor={error}
+                        variant="filled"
+                        onClick={() => dispatch(removeAnswerById(item.id))}
+                      >
+                        delete
+                      </Button>
+                    </Flex>
+                  </AnswerItem>
+                );
+              })}
+            </div>
+          )}
+
           <Flex justify="end">
             <Button
               fontSize={"22px"}

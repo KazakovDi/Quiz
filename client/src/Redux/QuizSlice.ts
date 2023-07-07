@@ -82,7 +82,7 @@ const initialState: State = {
   CreatingQuestion: null,
 };
 const QuizSlice = createSlice({
-  initialState: initialState,
+  initialState,
   name: "quiz",
   reducers: {
     changeQuestionType(state, action: PayloadAction<QuestionTypes>) {
@@ -102,15 +102,24 @@ const QuizSlice = createSlice({
           }),
         ];
     },
-    addAnswer(state) {
-      if (state.CreatingQuestion)
-        state.CreatingQuestion.answers.push({
-          id: "" + Math.random(),
-          body: "",
-          isCorrect: false,
-        });
+    addAnswer(state, action: any) {
+      if (state.CreatingQuestion) {
+        if (action.payload) {
+          state.CreatingQuestion.answers[0] = {
+            id: action.payload.id,
+            body: action.payload.body,
+            isCorrect: true,
+          };
+        } else {
+          state.CreatingQuestion.answers.push({
+            id: "" + Math.random(),
+            body: "",
+            isCorrect: false,
+          });
+        }
+      }
     },
-    changeAnswerIsCorrect(state, action: PayloadAction<string>) {
+    changeTestAnswer(state, action: PayloadAction<string>) {
       if (state.CreatingQuestion)
         state.CreatingQuestion.answers = [
           ...state.CreatingQuestion.answers.map((item) => {
@@ -122,6 +131,20 @@ const QuizSlice = createSlice({
             } else return { ...item, isCorrect: false };
           }),
         ];
+    },
+    changeMultiTestAnswer(state, action: PayloadAction<string>) {
+      if (state.CreatingQuestion) {
+        state.CreatingQuestion.answers = state.CreatingQuestion?.answers.map(
+          (item) => {
+            if (item.id === action.payload) {
+              return {
+                ...item,
+                isCorrect: !item.isCorrect,
+              };
+            } else return item;
+          }
+        );
+      }
     },
     removeAnswerById(state, action: PayloadAction<string>) {
       if (state.CreatingQuestion)
@@ -156,18 +179,33 @@ const QuizSlice = createSlice({
         }
       );
     },
-    setAnswer(state, action: PayloadAction<string>) {
-      state.Answers.push(action.payload);
+    clearCreatingQuiz(state) {
+      state.CreatingQuiz = initialState.CreatingQuiz;
+      state.CreatingQuestion = null;
+    },
+    setAnswer(state, action: PayloadAction<string[]>) {
+      state.Answers.push(...action.payload);
     },
     calculateResult(state) {
       let res = 0;
-      state.Answers.forEach((item, index) => {
-        state.CurrentQuiz.questions[index].answers.forEach((answer) => {
-          console.log("answer", answer);
-          if (answer.body === item && answer.isCorrect) res = res + 1;
+      state.CurrentQuiz.questions.forEach((question, questionIndex) => {
+        question.answers.forEach((answer) => {
+          if (answer.isCorrect) {
+            if (
+              state.Answers.findIndex((value) => value === answer.body) > -1
+            ) {
+              res = res + 1;
+            }
+          }
         });
       });
       state.Result = res;
+    },
+    clearAnswers(state) {
+      state.Answers = [];
+    },
+    clearResult(state) {
+      state.Result = 0;
     },
   },
   extraReducers: (builder) => {
@@ -208,13 +246,17 @@ export const {
   changeQuestionBody,
   addAnswer,
   removeAnswerById,
-  changeAnswerIsCorrect,
+  changeTestAnswer,
   changeAnswerBody,
   closeModal,
   editModal,
   submitQuestion,
   addQuestion,
   deleteQuestion,
+  changeMultiTestAnswer,
   calculateResult,
   setAnswer,
+  clearAnswers,
+  clearCreatingQuiz,
+  clearResult,
 } = QuizSlice.actions;

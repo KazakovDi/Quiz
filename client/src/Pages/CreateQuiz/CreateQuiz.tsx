@@ -15,6 +15,7 @@ import styled from "styled-components";
 import Devider from "../../Components/UI/Devider/Devider";
 import GoBackBtn from "../../Components/GoBackBtn/GoBackBtn";
 import { QuizProps } from "../../types/quiztypes";
+import { clearCreatingQuiz } from "../../Redux/QuizSlice";
 const CreateQuiz = () => {
   const {
     control,
@@ -32,6 +33,7 @@ const CreateQuiz = () => {
     newQuiz.cover = "";
     newQuiz.questions = [...questions];
     dispatch(fetchCreateQuiz(newQuiz));
+    dispatch(clearCreatingQuiz());
   };
   return (
     <FormWrapper align="center" justify="center">

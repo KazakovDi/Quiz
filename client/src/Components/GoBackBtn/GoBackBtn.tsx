@@ -26,6 +26,8 @@ const GoBackBtn = (props: GoBackBtnProps) => {
 
 const Btn = styled(Button)<GoBackBtnProps>`
   position: ${(props) => (props.absolute ? "absolute" : "static")};
+  border: none;
+  background: none;
   top: ${(props) => props.top};
   bottom: ${(props) => props.bottom};
   left: ${(props) => props.left};

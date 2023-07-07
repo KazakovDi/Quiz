@@ -18,6 +18,7 @@ const Login = () => {
   const navigate = useNavigate();
   const submitHandler = async (values: LoginProps) => {
     const { payload }: any = await dispatch(fetchLogin(values));
+    console.log(payload);
     if (payload.token) {
       window.localStorage.setItem("token", payload.token);
       navigate("/");

@@ -1,15 +1,22 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { RootState, useAppDispatch } from "../../Redux/store";
-import { fetchQuizById } from "../../Redux/QuizSlice";
+import {
+  clearAnswers,
+  clearResult,
+  fetchQuizById,
+} from "../../Redux/QuizSlice";
 import { useSelector } from "react-redux";
 import Flex from "../../Components/UI/Flex/Flex";
 import Button from "../../Components/UI/Button/Button";
 import { additional } from "../../Components/Style/pallete";
+import GoBackBtn from "../../Components/GoBackBtn/GoBackBtn";
 const QuizTitleScreen = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   useEffect(() => {
+    dispatch(clearAnswers());
+    dispatch(clearResult());
     if (id) dispatch(fetchQuizById(id));
   }, []);
 
@@ -18,7 +25,10 @@ const QuizTitleScreen = () => {
   );
   return (
     <>
-      <h1>{title}</h1>
+      <Flex align="center">
+        <GoBackBtn />
+        <h1>{title}</h1>
+      </Flex>
       {cover ? (
         <img width="100%" src={cover} alt="cover image" />
       ) : (
