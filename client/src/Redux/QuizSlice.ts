@@ -77,6 +77,7 @@ const initialState: State = {
     cover: "",
     description: "",
     questions: [],
+    tags: [],
   },
   Quizes: {
     data: [],
@@ -88,6 +89,7 @@ const initialState: State = {
     cover: "",
     description: "",
     questions: [],
+    tags: [],
   },
   CreatingQuestion: null,
 };

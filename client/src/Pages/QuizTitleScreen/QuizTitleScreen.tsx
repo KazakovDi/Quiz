@@ -11,6 +11,7 @@ import Flex from "../../Components/UI/Flex/Flex";
 import Button from "../../Components/UI/Button/Button";
 import { additional } from "../../Components/Style/pallete";
 import GoBackBtn from "../../Components/GoBackBtn/GoBackBtn";
+import styled from "styled-components";
 const QuizTitleScreen = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
@@ -24,20 +25,20 @@ const QuizTitleScreen = () => {
     (state: RootState) => state.Quiz.CurrentQuiz
   );
   return (
-    <>
+    <Flex direction="column">
       <Flex align="center">
         <GoBackBtn />
         <h1>{title}</h1>
       </Flex>
       {cover ? (
-        <img
+        <Cover
           width="100%"
           height="600px"
           src={`http://localhost:5000${cover}`}
           alt="cover image"
         />
       ) : (
-        <img width="100%" src="http://localhost:3000/Quiza.png" />
+        <Cover width="100%" src="http://localhost:3000/Quiza.png" />
       )}
       <pre>{description}</pre>
       <Flex align="center" justify="between">
@@ -48,8 +49,12 @@ const QuizTitleScreen = () => {
           </Button>
         </Link>
       </Flex>
-    </>
+    </Flex>
   );
 };
 
+const Cover = styled.img`
+  width: 100%;
+  height: 600px;
+`;
 export default QuizTitleScreen;

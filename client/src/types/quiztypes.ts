@@ -21,4 +21,5 @@ export interface QuizProps {
   cover: string;
   description: string;
   questions: QuiestionProps[];
+  tags: string[];
 }

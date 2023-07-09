@@ -24,6 +24,7 @@ router.post("/create", async (req, res) => {
     title: req.body.title,
     cover: req.body.cover,
     description: req.body.description,
+    tags: req.body.tags,
     questions: req.body.questions,
   });
   const post = await doc.save();
@@ -38,7 +39,6 @@ router.post(
   checkAuth,
   upload.single("image"),
   async (req, res) => {
-    console.log(req);
     try {
       res.json({
         url: `/uploads/${req.imagePath + req.file.originalname}`,

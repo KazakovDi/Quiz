@@ -27,6 +27,8 @@ import { useNavigate } from "react-router-dom";
 const CreateQuiz = () => {
   const imageRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
   const {
     control,
     handleSubmit,
@@ -36,14 +38,16 @@ const CreateQuiz = () => {
   const { questions, cover } = useSelector(
     (state: RootState) => state.Quiz.CreatingQuiz
   );
-  const dispatch = useAppDispatch();
 
-  const HandleSubmit = (values: any) => {
+  const HandleSubmit = async (values: any) => {
     const newQuiz: QuizProps = { ...values };
+    const tags = values.tags.replaceAll(",", "");
+    newQuiz.tags = tags.split(" ");
+    console.log(newQuiz);
     if (imageRef.current) newQuiz.cover = cover;
     else newQuiz.cover = "";
     newQuiz.questions = [...questions];
-    dispatch(fetchCreateQuiz(newQuiz));
+    await dispatch(fetchCreateQuiz(newQuiz));
     dispatch(clearCreatingQuiz());
     navigate("/");
   };
@@ -137,6 +141,19 @@ const CreateQuiz = () => {
                   placeholder="Type the question (150 symbols)"
                 />
               </div>
+            )}
+          />
+          <Controller
+            name="tags"
+            control={control}
+            render={({ field }) => (
+              <FormInput
+                {...field}
+                fontSize="20px"
+                placeholder="tags"
+                variant="hollow"
+                fullWidth
+              />
             )}
           />
         </Flex>
