@@ -17,6 +17,7 @@ const Question = () => {
   const { id } = useParams();
   if (!question) navigate("/");
   const [choosenAnswers, setChosenAnswer] = useState<string[]>([]);
+  console.log(choosenAnswers);
   const [fullAnswer, setFullAnswer] = useState<string>("");
   const { questionBody, answers, type } = useSelector(
     (state: RootState) => state.Quiz.CurrentQuiz.questions[question as any]
@@ -24,16 +25,21 @@ const Question = () => {
   const questions = useSelector(
     (state: RootState) => state.Quiz.CurrentQuiz.questions
   );
-  const ChooseAnswer = (id: string) => {
-    if (type === QuestionTypes.TEST) {
-      setChosenAnswer((prevState) => [...prevState, id]);
-    } else if (type === QuestionTypes.MULTI) {
-      const index = choosenAnswers.findIndex((value) => value === id);
+  const ChooseAnswer = (answerBody: string) => {
+    const index = choosenAnswers.findIndex((value) => value === answerBody);
+    if (type === QuestionTypes.MULTI) {
       if (index === -1) {
-        setChosenAnswer((prevState) => [...prevState, id]);
+        setChosenAnswer((prevState) => [...prevState, answerBody]);
       } else {
-        console.log(choosenAnswers.slice(index, 1));
+        const newState: string[] = choosenAnswers.filter((item, itemIndex) => {
+          if (index !== itemIndex) {
+            return item;
+          }
+        });
+        setChosenAnswer(newState);
       }
+    } else if (type === QuestionTypes.TEST) {
+      setChosenAnswer([answerBody]);
     }
   };
 
@@ -64,7 +70,7 @@ const Question = () => {
                 {choosenAnswers.findIndex((value) => value === item.body) >
                 -1 ? (
                   <Button
-                    onClick={() => ChooseAnswer(item.id)}
+                    onClick={() => ChooseAnswer(item.body)}
                     variant="filled"
                     color="#fff"
                     bgColor={calm}
@@ -73,7 +79,7 @@ const Question = () => {
                   </Button>
                 ) : (
                   <Button
-                    onClick={() => ChooseAnswer(item.id)}
+                    onClick={() => ChooseAnswer(item.body)}
                     variant="outlined"
                     color={calm}
                   >

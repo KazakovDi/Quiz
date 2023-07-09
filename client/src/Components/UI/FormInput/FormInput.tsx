@@ -51,7 +51,7 @@ const Input = styled.input<FormInputProps>`
     props.variant === "underlined" && "4px solid " + calm};
   background-color: ${(props) =>
     props.bgColor ? props.bgColor : "transparent"};
-  border-radius: ${(props) => props.radius};
+  border-radius: ${(props) => props.variant !== "underlined" && props.radius};
 `;
 
 export default FormInput;

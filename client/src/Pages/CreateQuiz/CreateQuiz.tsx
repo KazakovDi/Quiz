@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 import { useForm, Controller } from "react-hook-form";
 import FormInput from "../../Components/UI/FormInput/FormInput";
@@ -7,33 +7,54 @@ import Button from "../../Components/UI/Button/Button";
 import { IconPlus } from "@tabler/icons-react";
 import { error, calm, disabled, success } from "../../Components/Style/pallete";
 import QuestionModal from "../../Components/QuestionModal/QuestionModal";
-import { RootState, useAppDispatch } from "../../Redux/store";
+import { AppDispatch, RootState, useAppDispatch } from "../../Redux/store";
 import { useSelector } from "react-redux";
-import { addQuestion, editModal, fetchCreateQuiz } from "../../Redux/QuizSlice";
+import {
+  addQuestion,
+  setCover,
+  fetchCreateQuiz,
+  fetchQuizCover,
+  removeCover,
+} from "../../Redux/QuizSlice";
 import Flex from "../../Components/UI/Flex/Flex";
 import styled from "styled-components";
 import Devider from "../../Components/UI/Devider/Devider";
 import GoBackBtn from "../../Components/GoBackBtn/GoBackBtn";
 import { QuizProps } from "../../types/quiztypes";
 import { clearCreatingQuiz } from "../../Redux/QuizSlice";
+import { useNavigate } from "react-router-dom";
+
 const CreateQuiz = () => {
+  const imageRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
   const {
     control,
     handleSubmit,
     register,
     formState: { errors },
   } = useForm<any>();
-  const questions = useSelector(
-    (state: RootState) => state.Quiz.CreatingQuiz.questions
+  const { questions, cover } = useSelector(
+    (state: RootState) => state.Quiz.CreatingQuiz
   );
   const dispatch = useAppDispatch();
 
   const HandleSubmit = (values: any) => {
     const newQuiz: QuizProps = { ...values };
-    newQuiz.cover = "";
+    if (imageRef.current) newQuiz.cover = cover;
+    else newQuiz.cover = "";
     newQuiz.questions = [...questions];
     dispatch(fetchCreateQuiz(newQuiz));
     dispatch(clearCreatingQuiz());
+    navigate("/");
+  };
+  const HandleCoverUpload = async (event: any) => {
+    const formData = new FormData();
+    const file = event.target.files[0];
+    formData.append("image", file);
+    const {
+      payload: { url },
+    } = await dispatch(fetchQuizCover(formData));
+    dispatch(setCover(url));
   };
   return (
     <FormWrapper align="center" justify="center">
@@ -56,6 +77,50 @@ const CreateQuiz = () => {
               />
             )}
           />
+          {cover ? null : (
+            <>
+              <Devider margin="10px 0 0 0" />
+              <Button
+                variant="filled"
+                bgColor={calm}
+                color="#fff"
+                onClick={() => {
+                  if (imageRef.current) imageRef.current.click();
+                }}
+                type="button"
+              >
+                Upload cover
+              </Button>
+            </>
+          )}
+
+          <input
+            onChange={(event) => HandleCoverUpload(event)}
+            hidden
+            type="file"
+            ref={imageRef}
+          />
+          {cover ? (
+            <ImageBlock>
+              <Button
+                onClick={() => {
+                  dispatch(removeCover());
+                  if (imageRef.current) imageRef.current.value = "";
+                }}
+                variant="filled"
+                bgColor={error}
+                color="#fff"
+                fullWidth
+              >
+                Remove cover
+              </Button>
+              <Cover
+                width="100%"
+                height="300px"
+                src={`http://localhost:5000${cover}`}
+              />
+            </ImageBlock>
+          ) : null}
           <Devider margin={"20px 0 0 0"} />
           <Controller
             name="description"
@@ -113,6 +178,12 @@ const Heading = styled.h3`
   margin: 0;
   margin-right: 10px;
   font-size: 30px;
+`;
+const ImageBlock = styled.div`
+  margin-top: 10px;
+`;
+const Cover = styled.img`
+  margin-top: 10px;
 `;
 const Label = styled.label`
   font-size: 36px;

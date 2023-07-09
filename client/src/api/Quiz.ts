@@ -1,4 +1,3 @@
-import { AxiosResponse } from "axios";
 import { QuizProps } from "../types/quiztypes";
 import { Base } from "./Base";
 
@@ -15,6 +14,19 @@ export default class Quiz extends Base {
     const response = await this.request.post(
       `${this.baseUrl}/quiz/create`,
       input
+    );
+    return response.data;
+  }
+  async uploadPhoto(cover: FormData) {
+    const response = await this.request.post(
+      `${this.baseUrl}/quiz/uploadImage`,
+      cover
+    );
+    return response.data;
+  }
+  async getPhoto(imageName: string) {
+    const response = await this.request.get(
+      `${this.baseUrl}/uploads/${imageName}`
     );
     return response.data;
   }

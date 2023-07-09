@@ -33,7 +33,17 @@ export const fetchQuizes = createAsyncThunk<QuizProps[]>(
     }
   }
 );
-
+export const fetchQuizCover = createAsyncThunk<string, FormData>(
+  "quiz/fetchQuizCover",
+  async (cover) => {
+    try {
+      const coverLink = await apiInterface.quiz.uploadPhoto(cover);
+      return coverLink;
+    } catch (err: any) {
+      console.log(err);
+    }
+  }
+);
 export const fetchQuizById = createAsyncThunk<QuizProps, string>(
   "quiz/fetchQuizById",
   async (id) => {
@@ -166,6 +176,12 @@ const QuizSlice = createSlice({
         answers: [],
       });
     },
+    setCover(state, action: PayloadAction<string>) {
+      state.CreatingQuiz.cover = action.payload;
+    },
+    removeCover(state) {
+      state.CreatingQuiz.cover = "";
+    },
     deleteQuestion(state, action: PayloadAction<string>) {
       state.CreatingQuiz.questions = state.CreatingQuiz.questions.filter(
         (item) => item.id !== action.payload
@@ -251,12 +267,14 @@ export const {
   closeModal,
   editModal,
   submitQuestion,
+  setCover,
   addQuestion,
   deleteQuestion,
   changeMultiTestAnswer,
   calculateResult,
   setAnswer,
   clearAnswers,
+  removeCover,
   clearCreatingQuiz,
   clearResult,
 } = QuizSlice.actions;

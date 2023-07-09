@@ -30,7 +30,12 @@ const QuizTitleScreen = () => {
         <h1>{title}</h1>
       </Flex>
       {cover ? (
-        <img width="100%" src={cover} alt="cover image" />
+        <img
+          width="100%"
+          height="600px"
+          src={`http://localhost:5000${cover}`}
+          alt="cover image"
+        />
       ) : (
         <img width="100%" src="http://localhost:3000/Quiza.png" />
       )}

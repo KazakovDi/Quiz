@@ -9,6 +9,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/quiz", quizRouter);
+app.use("/uploads", express.static("uploads"));
 
 const start = async () => {
   try {

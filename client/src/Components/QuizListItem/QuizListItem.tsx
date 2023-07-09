@@ -5,6 +5,7 @@ import Flex from "../UI/Flex/Flex";
 import { QuizProps } from "../../types/quiztypes";
 
 const QuizListItem = ({ cover, title, description, _id }: QuizProps) => {
+  console.log(cover);
   return (
     <QuizCard>
       {!cover ? (
@@ -14,7 +15,11 @@ const QuizListItem = ({ cover, title, description, _id }: QuizProps) => {
           src={"http://localhost:3000/Quiza.png"}
         />
       ) : (
-        <img src={cover} />
+        <img
+          width="300px"
+          height="200px"
+          src={`http://localhost:5000${cover}`}
+        />
       )}
       <Heading>{title}</Heading>
       <Description>{description}</Description>
