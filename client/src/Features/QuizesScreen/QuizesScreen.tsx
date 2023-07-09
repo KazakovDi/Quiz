@@ -3,9 +3,11 @@ import QuizListItem from "../../Components/QuizListItem/QuizListItem";
 import Flex from "../../Components/UI/Flex/Flex";
 import styled from "styled-components";
 import { QuizProps } from "../../types/quiztypes";
+import SearchInput from "../SearchInput/SearchInput";
 const QuizesScreen = ({ data }: { data: QuizProps[] }) => {
   return (
     <Wrapper>
+      <SearchInput />
       <Flex wrap="wrap" justify="around">
         {data.map((item) => {
           console.log(item);

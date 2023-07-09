@@ -17,6 +17,7 @@ interface State {
     data: QuizProps[] | [];
     status: responseStatus;
   };
+  Storage: QuizProps[];
   CreatingQuiz: QuizProps;
   CreatingQuestion: QuiestionProps | null;
 }
@@ -83,6 +84,7 @@ const initialState: State = {
     data: [],
     status: responseStatus.DEFAULT,
   },
+  Storage: [],
   CreatingQuiz: {
     _id: "",
     title: "",
@@ -129,6 +131,20 @@ const QuizSlice = createSlice({
             isCorrect: false,
           });
         }
+      }
+    },
+    searchByTags(state, action: PayloadAction<string>) {
+      if (action.payload) {
+        const tags = action.payload.replaceAll(",", "").split(" ");
+        state.Quizes.data = state.Storage.filter((item) => {
+          console.log(item);
+          for (let i = 0; i < tags.length; i++) {
+            console.log(tags[i]);
+            return item.tags.indexOf(tags[i]) !== -1;
+          }
+        });
+      } else {
+        state.Quizes.data = state.Storage;
       }
     },
     changeTestAnswer(state, action: PayloadAction<string>) {
@@ -244,6 +260,7 @@ const QuizSlice = createSlice({
         data: action.payload,
         status: responseStatus.FULLFILLED,
       };
+      state.Storage = action.payload;
     });
 
     builder.addCase(fetchQuizById.pending, (state) => {});
@@ -277,6 +294,7 @@ export const {
   setAnswer,
   clearAnswers,
   removeCover,
+  searchByTags,
   clearCreatingQuiz,
   clearResult,
 } = QuizSlice.actions;
