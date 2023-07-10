@@ -18,6 +18,11 @@ interface State {
     data: QuizProps[] | [];
     status: responseStatus;
   };
+  SortProps: {
+    tags: string;
+    title: string;
+    author: string;
+  };
   Storage: QuizProps[];
   CreatingQuiz: QuizProps;
   CreatingQuestion: QuiestionProps | null;
@@ -73,6 +78,11 @@ export const fetchCreateQuiz = createAsyncThunk<any, QuizProps>(
 const initialState: State = {
   Answers: [],
   Result: 0,
+  SortProps: {
+    tags: "",
+    author: "",
+    title: "",
+  },
   CurrentQuiz: {
     _id: "",
     title: "",
@@ -80,6 +90,7 @@ const initialState: State = {
     description: "",
     questions: [],
     tags: [],
+    Author: "",
   },
   Quizes: {
     data: [],
@@ -93,8 +104,35 @@ const initialState: State = {
     description: "",
     questions: [],
     tags: [],
+    Author: "",
   },
   CreatingQuestion: null,
+};
+const sortQuizes = (state: any) => {
+  let data = [...state.Storage];
+  let regex: any;
+  if (state.SortProps.title) {
+    regex = new RegExp(state.SortProps.title, "i");
+    data = data.filter((item) => {
+      return item.title.match(regex);
+    });
+  }
+  if (state.SortProps.author) {
+    regex = new RegExp(state.SortProps.author, "i");
+    data = data.filter((item) => {
+      return item.Author.username.match(regex);
+    });
+  }
+  if (state.SortProps.tags) {
+    const tags = state.SortProps.tags.replaceAll(",", "").split(" ");
+    data = data.filter((item) => {
+      for (let i = 0; i < tags.length; i++) {
+        return item.tags.indexOf(tags[i]) !== -1;
+      }
+    });
+  }
+
+  state.Quizes.data = [...data];
 };
 const QuizSlice = createSlice({
   initialState,
@@ -135,28 +173,20 @@ const QuizSlice = createSlice({
       }
     },
     searchByTags(state, action: PayloadAction<string>) {
-      if (action.payload) {
-        const tags = action.payload.replaceAll(",", "").split(" ");
-        state.Quizes.data = state.Storage.filter((item) => {
-          console.log(item);
-          for (let i = 0; i < tags.length; i++) {
-            console.log(tags[i]);
-            return item.tags.indexOf(tags[i]) !== -1;
-          }
-        });
-      } else {
-        state.Quizes.data = state.Storage;
-      }
+      state.SortProps.tags = action.payload;
+      sortQuizes(state);
     },
     searchByName(state, action: PayloadAction<string>) {
-      if (action.payload) {
-        const regex = new RegExp(action.payload, "i");
-        state.Quizes.data = state.Storage.filter((item) => {
-          return item.title.match(regex);
-        });
-      } else {
-        state.Quizes.data = state.Storage;
-      }
+      state.SortProps.title = action.payload;
+
+      sortQuizes(state);
+    },
+    searchByAuthor(state, action: PayloadAction<string>) {
+      state.SortProps.author = action.payload;
+      sortQuizes(state);
+    },
+    clearSortProps(state) {
+      state.SortProps = initialState.SortProps;
     },
     changeSortMethod(state, action: PayloadAction<Sort>) {
       if (action.payload === Sort.AZ)
@@ -298,7 +328,9 @@ const QuizSlice = createSlice({
 
     builder.addCase(fetchCreateQuiz.pending, (state) => {});
     builder.addCase(fetchCreateQuiz.rejected, (state) => {});
-    builder.addCase(fetchCreateQuiz.fulfilled, (state, action) => {});
+    builder.addCase(fetchCreateQuiz.fulfilled, (state, action) => {
+      console.log(action.payload);
+    });
   },
 });
 
@@ -313,8 +345,10 @@ export const {
   changeAnswerBody,
   closeModal,
   editModal,
+  clearSortProps,
   submitQuestion,
   searchByName,
+  searchByAuthor,
   setCover,
   addQuestion,
   deleteQuestion,

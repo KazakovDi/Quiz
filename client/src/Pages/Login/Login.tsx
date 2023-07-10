@@ -64,7 +64,7 @@ const Login = () => {
           align="center"
           weight="400"
           fontSize="32px"
-          to={"/register"}
+          to={"/auth/register"}
         >
           Don't have an account yet ? Register now
         </SimpleLink>

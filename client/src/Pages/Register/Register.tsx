@@ -4,15 +4,25 @@ import Flex from "../../Components/UI/Flex/Flex";
 import { Controller } from "react-hook-form";
 import FormInput from "../../Components/UI/FormInput/FormInput";
 import { useForm } from "react-hook-form";
-import { LoginProps, RegisterProps } from "../../types/userInterfaces";
+import { RegisterProps } from "../../types/userInterfaces";
 import Devider from "../../Components/UI/Devider/Devider";
 import Button from "../../Components/UI/Button/Button";
 import { calm } from "../../Components/Style/pallete";
 import SimpleLink from "../../Components/UI/SimpleLink/SimpleLink";
+import { useAppDispatch } from "../../Redux/store";
+import { useNavigate } from "react-router-dom";
+import { fetchRegister } from "../../Redux/UserSlice";
 const Register = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { control, handleSubmit } = useForm<RegisterProps>();
-  const submitHandler = (values: RegisterProps) => {
-    console.log(values);
+  const submitHandler = async (values: RegisterProps) => {
+    const { payload }: any = await dispatch(fetchRegister(values));
+    console.log(payload);
+    if (payload.token) {
+      window.localStorage.setItem("token", payload.token);
+      navigate("/");
+    }
   };
   return (
     <Wrapper align="center" justify="center">
@@ -70,7 +80,7 @@ const Register = () => {
           align="center"
           weight="400"
           fontSize="32px"
-          to={"/login"}
+          to={"/auth/login"}
         >
           Already have an account ? Login now
         </SimpleLink>

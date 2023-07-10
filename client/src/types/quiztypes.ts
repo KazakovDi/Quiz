@@ -22,4 +22,5 @@ export interface QuizProps {
   description: string;
   questions: QuiestionProps[];
   tags: string[];
+  Author: string;
 }

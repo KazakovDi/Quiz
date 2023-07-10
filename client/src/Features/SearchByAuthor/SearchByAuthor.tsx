@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import FormInput from "../../Components/UI/FormInput/FormInput";
 import { useAppDispatch } from "../../Redux/store";
-import { searchByName } from "../../Redux/QuizSlice";
-const SearchByNameInput = () => {
+import { searchByAuthor } from "../../Redux/QuizSlice";
+const SearchByAuthorInput = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const dispatch = useAppDispatch();
   useEffect(() => {
     const id = setTimeout(() => {
-      dispatch(searchByName(""));
-      dispatch(searchByName(inputValue));
+      dispatch(searchByAuthor(inputValue));
     }, 1000);
 
     return () => {
@@ -20,10 +19,10 @@ const SearchByNameInput = () => {
       value={inputValue}
       onChange={(e) => setInputValue(e.target.value)}
       variant="hollow"
-      placeholder="quiz name..."
+      placeholder="author..."
       fullWidth
     />
   );
 };
 
-export default SearchByNameInput;
+export default SearchByAuthorInput;

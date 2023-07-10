@@ -16,17 +16,19 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 router.get("/", async (req, res) => {
-  const Quizes = await Quiz.find({});
+  const Quizes = await Quiz.find({}).populate("Author");
   res.json(Quizes);
 });
-router.post("/create", async (req, res) => {
-  const doc = new Quiz({
+router.post("/create", checkAuth, async (req, res) => {
+  const author = await User.findById(req.userId);
+  const doc = await new Quiz({
     title: req.body.title,
     cover: req.body.cover,
     description: req.body.description,
     tags: req.body.tags,
     questions: req.body.questions,
-  });
+    Author: author,
+  }).populate("Author");
   const post = await doc.save();
   res.json(post);
 });
@@ -48,19 +50,5 @@ router.post(
     }
   }
 );
-// router.post("/:id/create-product", async (req, res) => {
-//   const shop = await Shop.findById(req.params.id);
-//   const doc = new Product({
-//     price: req.body.price,
-//     title: req.body.title,
-//     description: req.body.description,
-//     cover: req.body.cover,
-//     shop: req.params.id,
-//   });
-//   const product = await doc.save();
-//   shop.products.push(product);
-//   await shop.save();
-//   res.json(product);
-// });
 
 module.exports = router;
