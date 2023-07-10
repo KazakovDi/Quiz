@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import FormInput from "../../Components/UI/FormInput/FormInput";
 import { useAppDispatch } from "../../Redux/store";
 import { searchByTags } from "../../Redux/QuizSlice";
-const SearchInput = () => {
+const SearchByTagsInput = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -19,9 +19,10 @@ const SearchInput = () => {
       value={inputValue}
       onChange={(e) => setInputValue(e.target.value)}
       variant="hollow"
-      placeholder="search"
+      placeholder="tags..."
+      fullWidth
     />
   );
 };
 
-export default SearchInput;
+export default SearchByTagsInput;

@@ -8,6 +8,7 @@ import {
 } from "../types/quiztypes";
 import { apiInterface } from "../api";
 import { responseStatus } from "../types/responseSatus";
+import { Sort } from "../types/sort";
 
 interface State {
   Answers: string[];
@@ -147,6 +148,32 @@ const QuizSlice = createSlice({
         state.Quizes.data = state.Storage;
       }
     },
+    searchByName(state, action: PayloadAction<string>) {
+      if (action.payload) {
+        const regex = new RegExp(action.payload, "i");
+        state.Quizes.data = state.Storage.filter((item) => {
+          return item.title.match(regex);
+        });
+      } else {
+        state.Quizes.data = state.Storage;
+      }
+    },
+    changeSortMethod(state, action: PayloadAction<Sort>) {
+      if (action.payload === Sort.AZ)
+        state.Quizes.data.sort((a, b) => (a.title > b.title ? 1 : -1));
+      if (action.payload === Sort.AZR)
+        state.Quizes.data.sort((a, b) => (a.title > b.title ? -1 : 1));
+      if (action.payload === Sort.NEW) state.Quizes.data = state.Storage;
+      if (action.payload === Sort.OLD) state.Quizes.data.reverse();
+      if (action.payload === Sort.SHORT)
+        state.Quizes.data.sort(
+          (a, b) => a.questions.length - b.questions.length
+        );
+      if (action.payload === Sort.LONG)
+        state.Quizes.data.sort(
+          (a, b) => b.questions.length - a.questions.length
+        );
+    },
     changeTestAnswer(state, action: PayloadAction<string>) {
       if (state.CreatingQuestion)
         state.CreatingQuestion.answers = [
@@ -280,12 +307,14 @@ export const {
   changeQuestionType,
   changeQuestionBody,
   addAnswer,
+  changeSortMethod,
   removeAnswerById,
   changeTestAnswer,
   changeAnswerBody,
   closeModal,
   editModal,
   submitQuestion,
+  searchByName,
   setCover,
   addQuestion,
   deleteQuestion,

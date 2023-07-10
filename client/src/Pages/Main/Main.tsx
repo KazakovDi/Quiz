@@ -8,7 +8,7 @@ import styled from "styled-components";
 import { RootState, useAppDispatch } from "../../Redux/store";
 import { useSelector } from "react-redux";
 import { fetchQuizes } from "../../Redux/QuizSlice";
-import SearchInput from "../../Features/SearchInput/SearchInput";
+import SearchInput from "../../Features/SearchByTagsInput/SearchByTagsInput";
 import Flex from "../../Components/UI/Flex/Flex";
 const Main = () => {
   const dispatch = useAppDispatch();

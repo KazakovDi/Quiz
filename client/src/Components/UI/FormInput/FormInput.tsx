@@ -46,7 +46,7 @@ const Input = styled.input<FormInputProps>`
   width: 100%;
   padding: 5px 5px 2px 0;
   border: ${(props) =>
-    props.variant === "hollow" ? "4px solid #000" : "none"};
+    props.variant === "hollow" ? "2px solid #000" : "none"};
   border-bottom: ${(props) =>
     props.variant === "underlined" && "4px solid " + calm};
   background-color: ${(props) =>
